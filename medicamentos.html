@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Medicamentos</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://www.lanacion.com.py/resizer/v2/4NMNROXOJJFUHIGCUQYZHPJU3Q.jpg?auth=11e300ad477059aaa38d40611217024bc44085be62abb867a3f1658714cc5493&width=900&smart=true') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+        }
+        .login-box img {
+            max-width: 100px;
+            margin-bottom: 20px;
+        }
+        .login-box h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #4CAF50;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-box button:hover {
+            background: #45a049;
+        }
+        #mensajes {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <img src="https://i0.wp.com/corporacionhd.com/wp-content/uploads/2021/07/LOGO-GANADERIA-V2.png?fit=413%2C465&ssl=1" alt="Marangatu Logo">
+            <h1>Registrar Medicamento</h1>
+
+            <!-- Medicamento se escribe solo una vez -->
+            <input type="text" id="medicamento" placeholder="Nombre del medicamento..." required>
+
+            <div id="mensajes"></div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let medicamento = "";
+
+        // Escuchar cuando llegue un nuevo UID desde Flask
+        socket.on("nuevo_uid", (data) => {
+            const uid = data.uid;
+            medicamento = document.getElementById("medicamento").value.trim();
+
+            if (!medicamento) {
+                mostrarMensaje("⚠️ Ingresa un medicamento antes de escanear.");
+                return;
+            }
+
+            // Enviar a Flask por fetch
+            fetch("/registrar_tratamiento", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ uid: uid, medicamento: medicamento })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    mostrarMensaje("✅ " + data.message);
+                } else {
+                    mostrarMensaje("❌ Error: " + data.message);
+                }
+            })
+            .catch(err => mostrarMensaje("❌ Error al conectar: " + err));
+        });
+
+        function mostrarMensaje(msg) {
+            const mensajes = document.getElementById("mensajes");
+            const p = document.createElement("p");
+            p.textContent = msg;
+            mensajes.prepend(p); // mensaje más reciente arriba
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAYVA - Menú</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            /* Imagen de fondo */
+            background: url('https://www.lanacion.com.py/resizer/v2/4NMNROXOJJFUHIGCUQYZHPJU3Q.jpg?auth=11e300ad477059aaa38d40611217024bc44085be62abb867a3f1658714cc5493&width=900&smart=true') 
+                        no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .menu-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .menu-box img {
+            max-width: 90px;
+            margin-bottom: 15px;
+        }
+
+        .menu-box h1 {
+            margin: 0 0 20px;
+            font-size: 28px;
+            color: #4CAF50;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .accordion {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            padding: 12px;
+            width: 100%;
+            text-align: center; /* centrado */
+            border: none;
+            outline: none;
+            transition: 0.3s;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .accordion:hover {
+            background-color: #45a049;
+        }
+
+        .panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .panel button {
+            width: 100%;
+            padding: 10px;
+            background: none;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            text-align: center; /* ahora centrado */
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .panel button:hover {
+            background: #e0f2e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu-box">
+            <img src="https://i0.wp.com/corporacionhd.com/wp-content/uploads/2021/07/LOGO-GANADERIA-V2.png?fit=413%2C465&ssl=1" alt="Logo Tayva">
+            <h1>TAYVA</h1>
+
+            <!-- General -->
+            <button class="accordion">GENERAL</button>
+            <div class="panel">
+                <button onclick="window.location.href='{{ url_for('index') }}'">Inicio</button>
+            </div>
+
+            <!-- Registros -->
+            <button class="accordion">REGISTRAR</button>
+            <div class="panel">
+                <button onclick="window.location.href='{{ url_for('ingreso') }}'">Ingreso</button>
+                <button onclick="window.location.href='{{ url_for('registrar_tratamiento') }}'">Vacunación</button>
+                <button onclick="window.location.href='{{ url_for('registrar_nacimiento') }}'">Registrar Nacimiento</button>
+                <button onclick="window.location.href='{{ url_for('registrar_leche') }}'">Registrar Leche</button>
+            </div>
+
+            <!-- Consultas -->
+            <button class="accordion">CONSULTAS</button>
+            <div class="panel">
+                <button onclick="window.location.href='{{ url_for('datos') }}'">Búsqueda</button>
+                <button onclick="window.location.href='{{ url_for('consulta_tratamientos') }}'">Consulta Tratamientos</button>
+                <button onclick="window.location.href='{{ url_for('consulta_nacimiento') }}'">Consultar Nacimiento</button>
+                <button onclick="window.location.href='{{ url_for('consulta_leche') }}'">Consulta Leche</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Script para acordeones
+        var acc = document.getElementsByClassName("accordion");
+        for (let i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                let panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

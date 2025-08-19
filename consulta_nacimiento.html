@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta de Nacimientos</title>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://www.lanacion.com.py/resizer/v2/4NMNROXOJJFUHIGCUQYZHPJU3Q.jpg?auth=11e300ad477059aaa38d40611217024bc44085be62abb867a3f1658714cc5493&width=900&smart=true') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-box button:hover {
+            background: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #aaa;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="login-box">
+        <h2>Consulta de Nacimientos</h2>
+        <form id="consultaForm" method="get" action="/consulta_nacimientos">
+            <input type="text" id="codigo_animal" name="uid" placeholder="Escanee el RFID..." readonly required>
+            <button type="submit">Consultar</button>
+        </form>
+
+        {% if partos %}
+        <h3>Historial de Nacimientos</h3>
+        <table>
+            <tr>
+                <th>Fecha</th>
+                <th>Observaciones</th>
+            </tr>
+            {% for p in partos %}
+            <tr>
+                <td>{{ p[0] }}</td>
+                <td>{{ p[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% elif partos is not none %}
+        <p>No se encontraron registros para este UID.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    var socket = io.connect("http://127.0.0.1:5000");
+
+    // Cuando llega un nuevo UID desde el servidor (ESP32)
+    socket.on("nuevo_uid", function(data) {
+        document.getElementById("codigo_animal").value = data.uid;
+        document.getElementById("consultaForm").submit(); // auto-consulta
+    });
+</script>
+</body>
+</html>

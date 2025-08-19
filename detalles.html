@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del Animal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://www.lanacion.com.py/resizer/V2/4NMNROXOJJFUHIGCUQYZHPJU3Q.jpg?auth=11e300ad477059aaa38d40611217024bc44085be62abb867a3f1658714cc5493&width=900&smart=true') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 50px auto;
+            width: 90%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #555;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Detalles del Animal</h2>
+        <table>
+            {% for campo, valor in datos.items() %}
+                <tr>
+                    <td>{{ campo.replace('_', ' ').capitalize() }}</td>
+                    <td>{{ valor }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="back-link">
+            <a href="{{ url_for('tabla', uid=datos['codigo']) }}">← Volver a la tabla</a>
+        </div>
+    </div>
+</body>
+</html>

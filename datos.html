@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marangatu Login</title>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://www.lanacion.com.py/resizer/v2/4NMNROXOJJFUHIGCUQYZHPJU3Q.jpg?auth=11e300ad477059aaa38d40611217024bc44085be62abb867a3f1658714cc5493&width=900&smart=true') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-box button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <img src="https://i0.wp.com/corporacionhd.com/wp-content/uploads/2021/07/LOGO-GANADERIA-V2.png?fit=413%2C465&ssl=1" alt="Marangatu Logo" style="width: 150px; height: auto;">
+            <h1>TYMBA</h1>
+            <form id="rfidForm" onsubmit="buscarCodigo(); return false;">
+                <input type="text" id="codigo_animal" placeholder="Escanea el RFID..." readonly> 
+                <button type="submit">BUSCAR</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var socket = io.connect("http://127.0.0.1:5000"); 
+
+        function buscarCodigo() {
+            var uid = document.getElementById("codigo_animal").value;
+            if (uid) {
+                window.location.href = "/tabla?uid=" + uid;
+            } else {
+                alert("No se ha escaneado ningún código.");
+            }
+        }
+
+        // Cuando llega un nuevo UID desde el servidor
+        socket.on("nuevo_uid", function(data) {
+            document.getElementById("codigo_animal").value = data.uid;
+            // Opcional: enviar automáticamente sin hacer click
+            // buscarCodigo();
+        });
+
+        // Permitir que Enter funcione aunque el input sea readonly
+        document.getElementById("rfidForm").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                buscarCodigo();
+            }
+        });
+    </script>
+</body>
+</html>
